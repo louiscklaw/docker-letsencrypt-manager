@@ -22,7 +22,7 @@ LE_ARCHIVE_ROOT="/etc/letsencrypt/archive"
 LE_RENEWAL_CONFIG_ROOT="/etc/letsencrypt/renewal"
 
 # The letsencrpt command line
-LE_CMD="/opt/certbot/venv/bin/certbot certonly ${LE_EXTRA_ARGS}"
+LE_CMD="/usr/local/bin/certbot certonly ${LE_EXTRA_ARGS}"
 
 function print_help {
   echo "Available commands:"
@@ -269,10 +269,11 @@ elif [ "${CMD}" = "help" ]; then
   print_help "${@}"
 elif [ "${CMD}" = "cron-auto-renewal" ]; then
   # CRON_TIME can be set via environment
-  # If not defined, the default is daily
-  CRON_TIME=${CRON_TIME:-@daily}
+  # If not defined, the default is daily @daily no longer being parsed by crond, changed to a hard set daily time
+  CRON_TIME=${CRON_TIME:-18 4 * * *}
   echo "Running cron job with execution time ${CRON_TIME}"
-  echo "${CRON_TIME} root /usr/local/bin/entrypoint.sh auto-renew >> /var/log/cron.log 2>&1" > /etc/cron.d/letsencrypt
+  #dont need the periodic crons, so just overwrite file													   
+  echo -e "${CRON_TIME} /usr/local/bin/entrypoint.sh auto-renew >> /var/log/cron.log 2>&1\n" > /etc/crontabs/root
   touch /var/log/cron.log && cron && tail -f /var/log/cron.log
 elif [ "${CMD}" = "print-pin" ]; then
   print_pin "${@}"
