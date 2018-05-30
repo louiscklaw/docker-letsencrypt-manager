@@ -11,7 +11,7 @@ VOLUME /var/acme-webroot
 VOLUME /var/log/
 
 # Install runtime dependency column (in util-linux), curl and bash
-RUN apk add --update util-linux curl bash
+RUN apk add --update util-linux curl bash coreutils
 
 # Copy executables
 COPY entrypoint.sh /usr/local/bin/
