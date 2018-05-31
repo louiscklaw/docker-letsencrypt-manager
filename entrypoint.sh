@@ -269,8 +269,8 @@ elif [ "${CMD}" = "help" ]; then
   print_help "${@}"
 elif [ "${CMD}" = "cron-auto-renewal" ]; then
   # CRON_TIME can be set via environment
-  # If not defined, the default is daily @daily no longer being parsed by crond, changed to a hard set daily time
-  CRON_TIME=${CRON_TIME:-18 4 * * *}
+  # If not defined, the default is daily @daily no longer being parsed by crond, changed to a hard set time
+  CRON_TIME=${CRON_TIME:-18 4 * * 0}
   echo "Running cron job with execution time ${CRON_TIME}"
   # dont need the periodic crons, so just overwrite file
   # output to log file and to docker std logs, this might not be correct, this allows crond to run in foreground and be monitored by docker
