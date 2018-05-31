@@ -272,9 +272,10 @@ elif [ "${CMD}" = "cron-auto-renewal" ]; then
   # If not defined, the default is daily @daily no longer being parsed by crond, changed to a hard set daily time
   CRON_TIME=${CRON_TIME:-18 4 * * *}
   echo "Running cron job with execution time ${CRON_TIME}"
-  #dont need the periodic crons, so just overwrite file													   
-  echo -e "${CRON_TIME} /usr/local/bin/entrypoint.sh auto-renew >> /var/log/cron.log 2>&1\n" > /etc/crontabs/root
-  touch /var/log/cron.log && cron && tail -f /var/log/cron.log
+  # dont need the periodic crons, so just overwrite file
+  # output to log file and to docker std logs, this might not be correct, this allows crond to run in foreground and be monitored by docker
+  echo -e "${CRON_TIME} /usr/local/bin/entrypoint.sh auto-renew | tee -a /var/log/cron.log /proc/1/fd/1 2>/proc/1/fd/2 >/dev/null\n" > /etc/crontabs/root
+  touch /var/log/cron.log && crond -f
 elif [ "${CMD}" = "print-pin" ]; then
   print_pin "${@}"
 else
