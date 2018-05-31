@@ -21,8 +21,8 @@ If you install a machine which should be able to request and automatically renew
 ```
 root@example.com:~ # letsencrypt-manager help
 Checking for newer docker image (pass --no-update-check to suppress this behavior)
-Pulling cli (gitsf/letsencrypt-manager:latest)...
-latest: Pulling from gitsf/letsencrypt-manager
+Pulling cli (dockersf/letsencrypt-manager:latest)...
+latest: Pulling from dockersf/letsencrypt-manager
 c30f6751f7b9: Pull complete
 e9b49204a716: Pull complete
 ffd2bf5cfcb6: Pull complete
@@ -42,7 +42,7 @@ d8b465d4cc8a: Pull complete
 4e756390d748: Pull complete
 1b1ae5ef54d7: Pull complete
 Digest: sha256:2692bdd736047fe6028b30f9acc48e774ff03fe1ca7966952450eeb9b4677307
-Status: Downloaded newer image for gitsf/letsencrypt-manager:latest
+Status: Downloaded newer image for dockersf/letsencrypt-manager:latest
 Available commands:
 
 help              - Show this help
