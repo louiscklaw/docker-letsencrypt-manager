@@ -11,7 +11,7 @@ If you install a machine which should be able to request and automatically renew
 
 1. Clone letsencrypt-manager
 ```
-# cd /opt/ && git clone https://github.com/bringnow/docker-letsencrypt-manager.git && cd docker-letsencrypt-manager
+# cd /opt/ && git clone https://github.com/gitsf/docker-letsencrypt-manager.git && cd docker-letsencrypt-manager
 ```
 3. Add an alias for letsencrypt-manager (optional):
 ```
@@ -21,8 +21,8 @@ If you install a machine which should be able to request and automatically renew
 ```
 root@example.com:~ # letsencrypt-manager help
 Checking for newer docker image (pass --no-update-check to suppress this behavior)
-Pulling cli (bringnow/letsencrypt-manager:latest)...
-latest: Pulling from bringnow/letsencrypt-manager
+Pulling cli (gitsf/letsencrypt-manager:latest)...
+latest: Pulling from gitsf/letsencrypt-manager
 c30f6751f7b9: Pull complete
 e9b49204a716: Pull complete
 ffd2bf5cfcb6: Pull complete
@@ -42,7 +42,7 @@ d8b465d4cc8a: Pull complete
 4e756390d748: Pull complete
 1b1ae5ef54d7: Pull complete
 Digest: sha256:2692bdd736047fe6028b30f9acc48e774ff03fe1ca7966952450eeb9b4677307
-Status: Downloaded newer image for bringnow/letsencrypt-manager:latest
+Status: Downloaded newer image for gitsf/letsencrypt-manager:latest
 Available commands:
 
 help              - Show this help
@@ -64,7 +64,7 @@ Just define the following environment variables in a file `.env`:
 
 * `LE_EMAIL`: Set the email-address used by letsencrypt. If not set, letsencrypt will ask for it interactively when requesting a certificate. (optional)
 * `LE_RSA_KEY_SIZE`: Set the RSA key size used by letsencrypt (optional, defaults to the default setting of letsencrypt).
-* `CRON_TIME`: The execution time of the renewal cronjob. For the syntax check [CronHowto](https://help.ubuntu.com/community/CronHowto). Default is every day (`@daily`).
+* `CRON_TIME`: The execution time of the renewal cronjob. For the syntax check [CronHowto](https://help.ubuntu.com/community/CronHowto). Default is weekly, must be entered in standard cron notation * * * * *
 * `LE_PRE_HOOK`: Set the hook command for running before a certificate is renewed.
 * `LE_POST_HOOK`: Set the hook command for running after a certificate is renewed.
 * `AUTO_RENEW_CHECK_SUCCESS_URL`: A URL to send a GET request to after a successful auto renew check (optional). This can be used to get notified if the job fails through a service like healthchecks.io or Dead Man's Snitch.
@@ -81,9 +81,9 @@ The `docker-compose.yml` config file already defines some docker host volumes. O
 
 The webserver of your choice must expose the configured webroot folder of the host (see the [Let's Encrypt Documentation](http://letsencrypt.readthedocs.org/en/latest/using.html#webroot) for details).
 
-If you want to use [haproxy](http://www.haproxy.org/) we recommend to use our [haproxy-letsencrypt Docker image](https://github.com/bringnow/docker-haproxy-letsencrypt) for zero-downtime renewal and automatic reload on configuration/certificate changes.
+If you want to use [haproxy](http://www.haproxy.org/) I recommend to use bringnow's [haproxy-letsencrypt Docker image](https://github.com/bringnow/docker-haproxy-letsencrypt) for zero-downtime renewal and automatic reload on configuration/certificate changes.
 
-If you want to use [nginx](http://nginx.org/) we recommend to use our [nginx-letsencrypt Docker image](https://github.com/bringnow/docker-nginx-letsencrypt) for zero-downtime renewal and automatic reload on configuration/certificate changes.
+If you want to use [nginx](http://nginx.org/) I recommend to use bringnow's [nginx-letsencrypt Docker image](https://github.com/bringnow/docker-nginx-letsencrypt) for zero-downtime renewal and automatic reload on configuration/certificate changes.
 
 ## Usage
 
@@ -94,10 +94,10 @@ You can show the installed certificates by simply calling `letsencrypt-manager l
 ```
 root@example.com:/opt/docker-letsencrypt-manager # letsencrypt-manager list
 Checking for newer docker image (pass --no-update-check to suppress this behavior)
-Pulling cli (bringnow/letsencrypt-manager:latest)...
-latest: Pulling from bringnow/letsencrypt-manager
+Pulling cli (gitsf/letsencrypt-manager:latest)...
+latest: Pulling from gitsf/letsencrypt-manager
 Digest: sha256:2692bdd736047fe6028b30f9acc48e774ff03fe1ca7966952450eeb9b4677307
-Status: Image is up to date for bringnow/letsencrypt-manager:latest
+Status: Image is up to date for gitsf/letsencrypt-manager:latest
 DOMAINNAME                    ALTERNATIVE DOMAINNAMES                        VALID UNTIL               REMAINING DAYS
 example.come                  example.com example.de                         Feb 14 12:52:00 2016 GMT  15
 ```
@@ -126,9 +126,9 @@ Starting the cronjob which automatically renews all installed certificate is act
 ```
 root@example.com:/opt/docker-letsencrypt-manager # ./update-cron.sh
 Checking for newer docker image (pass --no-update-check to suppress this behavior)
-latest: Pulling from bringnow/letsencrypt-manager
+latest: Pulling from gitsf/letsencrypt-manager
 Digest: sha256:1bca6790d578309fad48ac81c30cae826a91a92d9c09660ca9d307ddc435d6c8
-Status: Image is up to date for bringnow/letsencrypt-manager:latest
+Status: Image is up to date for gitsf/letsencrypt-manager:latest
 Creating dockerletsencryptmanager_cron_1...
 ```
 
@@ -150,15 +150,9 @@ Removing an domain from the host can be achieved by executing `letsencrypt-manag
 
 ### Sync certificates, keys and configuration to a Git repository
 
-If you want to backup the private keys and certificates (what you should do!) we recommend [docker-git-sync](https://github.com/bringnow/docker-git-sync). It will periodically listen for changes in the */etc/letsencrypt* folder and commit & push any changes to a Git repository of your choice. **Make sure to keep this Git repository in a safe place!**
-
-## Troubleshooting
-
-### tail: unrecognized file system type 0x794c7630 for '/var/log/cron.log
-
-Please update your letsencrypt-manager docker image and recreate your container(s), see [bug report](https://github.com/bringnow/docker-letsencrypt-manager/issues/2).
+If you want to backup the private keys and certificates (what you should do!) I recommend bringnow's [docker-git-sync](https://github.com/bringnow/docker-git-sync). It will periodically listen for changes in the */etc/letsencrypt* folder and commit & push any changes to a Git repository of your choice. **Make sure to keep this Git repository in a safe place!**
 
 ### Other issue
 
-Please have a look at the [existing issues](https://github.com/bringnow/docker-letsencrypt-manager/issues) or
-[report a new one](https://github.com/bringnow/docker-letsencrypt-manager/issues/new).
+Please have a look at the [existing issues](https://github.com/gitsf/docker-letsencrypt-manager/issues) or
+[report a new one](https://github.com/gitsf/docker-letsencrypt-manager/issues/new).
