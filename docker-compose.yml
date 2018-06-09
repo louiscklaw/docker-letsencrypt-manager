@@ -1,19 +1,50 @@
 version: '3.3'
 services:
-  cli:
-    image: dockersf/letsencrypt-manager:latest
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /var/acme-webroot:/var/acme-webroot
-      - ./cli.ini:/root/.config/letsencrypt/cli.ini
+    cli:
+        image: dockersf/letsencrypt-manager:latest
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
+            - /var/lib/letsencrypt:/var/lib/letsencrypt
+            - /var/acme-webroot:/var/acme-webroot
+            - ./cli.ini:/root/.config/letsencrypt/cli.ini
 
-  cron:
-    image: dockersf/letsencrypt-manager:latest
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /var/acme-webroot:/var/acme-webroot
-      - ./cli.ini:/root/.config/letsencrypt/cli.ini
-    command: cron-auto-renewal
-    restart: always
+    cron:
+        image: dockersf/letsencrypt-manager:latest
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
+            - /var/lib/letsencrypt:/var/lib/letsencrypt
+            - /var/acme-webroot:/var/acme-webroot
+            - ./cli.ini:/root/.config/letsencrypt/cli.ini
+        command: cron-auto-renewal
+        restart: always
+
+    nginx:
+        image: bringnow/nginx-letsencrypt
+        volumes:
+            - ./docker-mount/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./docker-mount/etc/nginx/conf.d:/etc/nginx/conf.d
+            - ./docker-mount/etc/nginx/dhparam:/etc/nginx/dhparam
+            - ./docker-mount/etc/letsencrypt:/etc/letsencrypt
+            - ./docker-mount/var/acme-webroot:/var/acme-webroot
+        ports:
+            - "80:80"
+            - "443:443"
+        #net: "host"
+        dns_search:
+            - "lan"
+        networks:
+            - www_network
+        restart: always
+
+    helloworld:
+        image: tutum/hello-world
+        container_name: hello_louislabs_com
+        ports:
+            - "10.142.0.2:8001:80"
+        networks:
+            - www_network
+
+networks:
+    www_network:
+        external:
+            name: www_network
