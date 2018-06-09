@@ -3,18 +3,18 @@ services:
     cli:
         image: dockersf/letsencrypt-manager:latest
         volumes:
-            - /etc/letsencrypt:/etc/letsencrypt
-            - /var/lib/letsencrypt:/var/lib/letsencrypt
-            - /var/acme-webroot:/var/acme-webroot
-            - ./cli.ini:/root/.config/letsencrypt/cli.ini
+            - ./docker-mount/etc/letsencrypt:/etc/letsencrypt
+            - ./docker-mount/var/lib/letsencrypt:/var/lib/letsencrypt
+            - ./docker-mount/var/acme-webroot:/var/acme-webroot
+            - ./docker-mount/cli.ini:/root/.config/letsencrypt/cli.ini
 
     cron:
         image: dockersf/letsencrypt-manager:latest
         volumes:
-            - /etc/letsencrypt:/etc/letsencrypt
-            - /var/lib/letsencrypt:/var/lib/letsencrypt
-            - /var/acme-webroot:/var/acme-webroot
-            - ./cli.ini:/root/.config/letsencrypt/cli.ini
+            - ./docker-mount/etc/letsencrypt:/etc/letsencrypt
+            - ./docker-mount/var/lib/letsencrypt:/var/lib/letsencrypt
+            - ./docker-mount/var/acme-webroot:/var/acme-webroot
+            - ./docker-mount/cli.ini:/root/.config/letsencrypt/cli.ini
         command: cron-auto-renewal
         restart: always
 
