@@ -19,7 +19,7 @@ services:
         restart: always
 
     nginx:
-        image: bringnow/nginx-letsencrypt
+        image: bringnow/nginx-letsencrypt:latest
         volumes:
             - ./docker-mount/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./docker-mount/etc/nginx/conf.d:/etc/nginx/conf.d
